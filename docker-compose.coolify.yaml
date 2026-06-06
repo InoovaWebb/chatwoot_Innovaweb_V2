@@ -2,10 +2,8 @@ version: '3'
 
 services:
   rails:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    image: chatwoot-custom:latest
+    image: 'ghcr.io/balbiss/chatwoot_innovaweb:latest'
+    pull_policy: always
     volumes:
       - 'storage:/app/storage'
     depends_on:
@@ -58,10 +56,8 @@ services:
       retries: 10
 
   sidekiq:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile
-    image: chatwoot-custom:latest
+    image: 'ghcr.io/balbiss/chatwoot_innovaweb:latest'
+    pull_policy: always
     volumes:
       - 'storage:/app/storage'
     depends_on:
