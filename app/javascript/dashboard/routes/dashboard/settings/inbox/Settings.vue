@@ -112,6 +112,9 @@ export default {
       widgetBubbleLauncherTitle: '',
       showConvertGate: false,
       aiPrompt: '',
+      attendantsQueue: [],
+      newAttendantName: '',
+      newAttendantPhone: '',
     };
   },
   computed: {
@@ -382,6 +385,9 @@ export default {
           if (newInbox?.ai_prompt !== oldInbox?.ai_prompt) {
             this.aiPrompt = newInbox?.ai_prompt || '';
           }
+          if (JSON.stringify(newInbox?.attendants_queue) !== JSON.stringify(oldInbox?.attendants_queue)) {
+            this.attendantsQueue = newInbox?.attendants_queue || [];
+          }
         }
       },
       immediate: true,
@@ -448,6 +454,7 @@ export default {
         ? this.inbox.help_center.slug
         : '';
       this.aiPrompt = this.inbox.ai_prompt || '';
+      this.attendantsQueue = this.inbox.attendants_queue || [];
 
       const savedBubbleSettings = LocalStorage.get(
         this.widgetBuilderStorageKey
@@ -511,6 +518,26 @@ export default {
       }
       return [...selected, current];
     },
+    addAttendant() {
+      if (!this.newAttendantName || !this.newAttendantPhone) {
+        useAlert('Nome e Telefone são obrigatórios.');
+        return;
+      }
+      this.attendantsQueue.push({
+        id: new Date().getTime(),
+        nome: this.newAttendantName,
+        telefone: this.newAttendantPhone,
+        ativo: true,
+      });
+      this.newAttendantName = '';
+      this.newAttendantPhone = '';
+    },
+    removeAttendant(index) {
+      this.attendantsQueue.splice(index, 1);
+    },
+    toggleAttendantStatus(index) {
+      this.attendantsQueue[index].ativo = !this.attendantsQueue[index].ativo;
+    },
     onTabChange(selectedTabIndex) {
       this.selectedTabIndex = selectedTabIndex;
       this.updateRouteWithoutRefresh(selectedTabIndex);
@@ -562,6 +589,7 @@ export default {
           sender_name_type: this.senderNameType,
           business_name: this.businessName || null,
           ai_prompt: this.aiPrompt,
+          attendants_queue: this.attendantsQueue,
           channel: {
             widget_color: this.inbox.widget_color,
             website_url: this.channelWebsiteUrl,
@@ -942,6 +970,64 @@ export default {
                 />
               </SettingsFieldSection>
               <div class="flex justify-end mx-6 mb-4">
+                <NextButton
+                  :label="$t('INBOX_MGMT.EDIT.SENDER_NAME_SECTION.BUSINESS_NAME.SAVE_BUTTON_TEXT')"
+                  @click="updateInbox"
+                />
+              </div>
+            </SettingsAccordion>
+
+            <SettingsAccordion
+              title="Fila de Atendentes (Rodízio)"
+              class="mt-6"
+            >
+              <div class="px-6 py-4">
+                <div class="flex gap-4 mb-4 items-end">
+                  <woot-input
+                    v-model="newAttendantName"
+                    label="Nome"
+                    placeholder="Ex: João"
+                    class="!mb-0 flex-1"
+                  />
+                  <woot-input
+                    v-model="newAttendantPhone"
+                    label="Telefone (ou ID)"
+                    placeholder="Ex: 559199999999"
+                    class="!mb-0 flex-1"
+                  />
+                  <NextButton
+                    label="Adicionar"
+                    class="mb-2"
+                    @click="addAttendant"
+                  />
+                </div>
+                
+                <table class="w-full text-left border-collapse" v-if="attendantsQueue.length > 0">
+                  <thead>
+                    <tr>
+                      <th class="border-b border-n-strong py-2 text-n-slate-11">Nome</th>
+                      <th class="border-b border-n-strong py-2 text-n-slate-11">Telefone</th>
+                      <th class="border-b border-n-strong py-2 text-n-slate-11 text-center">Ativo</th>
+                      <th class="border-b border-n-strong py-2 text-n-slate-11 text-right">Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(attendant, index) in attendantsQueue" :key="attendant.id" class="border-b border-n-weak">
+                      <td class="py-2 text-n-slate-12">{{ attendant.nome }}</td>
+                      <td class="py-2 text-n-slate-12">{{ attendant.telefone }}</td>
+                      <td class="py-2 text-center">
+                        <input type="checkbox" :checked="attendant.ativo" @change="toggleAttendantStatus(index)" />
+                      </td>
+                      <td class="py-2 text-right">
+                        <NextButton sm ghost red label="Remover" @click="removeAttendant(index)" />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p v-else class="text-n-slate-11 text-center py-4">Nenhum atendente na fila.</p>
+              </div>
+
+              <div class="flex justify-end mx-6 mb-4 mt-4">
                 <NextButton
                   :label="$t('INBOX_MGMT.EDIT.SENDER_NAME_SECTION.BUSINESS_NAME.SAVE_BUTTON_TEXT')"
                   @click="updateInbox"

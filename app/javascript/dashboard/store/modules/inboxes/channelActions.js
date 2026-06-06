@@ -12,6 +12,8 @@ export const buildInboxData = inboxParams => {
     // O backend já tem lógica para tratar string "null", mas é melhor não enviar
     if (value === null || value === undefined) {
       formData.append(key, '');
+    } else if (key === 'attendants_queue') {
+      formData.append(key, JSON.stringify(value));
     } else {
       formData.append(key, value);
     }

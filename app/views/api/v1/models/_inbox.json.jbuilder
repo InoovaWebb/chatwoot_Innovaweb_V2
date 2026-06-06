@@ -21,6 +21,7 @@ json.lock_to_single_conversation resource.lock_to_single_conversation
 json.sender_name_type resource.sender_name_type
 json.business_name resource.business_name
 json.ai_prompt resource.ai_prompt
+json.attendants_queue resource.attendants_queue
 
 if resource.portal.present?
   json.help_center do
