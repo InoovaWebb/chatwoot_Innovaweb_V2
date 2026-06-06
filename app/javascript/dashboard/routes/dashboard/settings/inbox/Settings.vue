@@ -41,6 +41,7 @@ import SelectInput from 'dashboard/components-next/select/Select.vue';
 import Widget from 'dashboard/modules/widget-preview/components/Widget.vue';
 import AccessToken from 'dashboard/routes/dashboard/settings/profile/AccessToken.vue';
 import { copyTextToClipboard } from 'shared/helpers/clipboard';
+import TextArea from 'dashboard/components-next/textarea/TextArea.vue';
 
 export default {
   components: {
@@ -74,6 +75,7 @@ export default {
     AccountHealth,
     Widget,
     AccessToken,
+    TextArea,
   },
   mixins: [inboxMixin],
   setup() {
