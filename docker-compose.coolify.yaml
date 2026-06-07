@@ -139,7 +139,7 @@ services:
     image: 'ghcr.io/fazer-ai/baileys-api:latest'
     pull_policy: always
     volumes:
-      - 'storage:/app/storage'
+      - 'baileys_storage:/app/storage'
     environment:
       - NODE_ENV=production
       - REDIS_URL=redis://redis:6379
