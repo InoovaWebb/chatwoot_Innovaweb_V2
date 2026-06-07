@@ -26,6 +26,7 @@ const emit = defineEmits([
   'add',
   'import',
   'export',
+  'exportLeads',
   'createSegment',
   'deleteSegment',
 ]);
@@ -105,6 +106,14 @@ const emit = defineEmits([
               :active-sort="activeSort"
               :active-ordering="activeOrdering"
               @update:sort="emit('update:sort', $event)"
+            />
+            <Button
+              icon="i-lucide-download"
+              label="Leads"
+              color="slate"
+              size="sm"
+              variant="ghost"
+              @click="emit('exportLeads')"
             />
             <ContactMoreActions
               @add="emit('add')"

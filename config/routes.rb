@@ -226,6 +226,7 @@ Rails.application.routes.draw do
               post :filter
               post :import
               post :export
+              get :export_leads
             end
             member do
               get :contactable_inboxes

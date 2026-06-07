@@ -49,6 +49,44 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
     head :ok, message: I18n.t('errors.contacts.export.success')
   end
 
+  def export_leads
+    start_date = parse_date(params[:start_date]) || Time.zone.now.beginning_of_month
+    end_date   = parse_date(params[:end_date])&.end_of_day || Time.zone.now.end_of_day
+    inbox_id   = params[:inbox_id].presence
+
+    # Find contact IDs that had conversations in the chosen inbox and period
+    conversations = Current.account.conversations.where(created_at: start_date..end_date)
+    conversations = conversations.where(inbox_id: inbox_id) if inbox_id
+
+    contact_ids = conversations.pluck(:contact_id).uniq
+
+    contacts = Current.account.contacts
+                      .where(id: contact_ids)
+                      .where.not(phone_number: [nil, ''])
+                      .select(:name, :phone_number)
+                      .distinct
+
+    csv_data = CSV.generate(headers: true, encoding: 'UTF-8') do |csv|
+      csv << ['Nome', 'Telefone']
+      contacts.each do |c|
+        csv << [c.name, c.phone_number]
+      end
+    end
+
+    inbox_name = if inbox_id
+                   Current.account.inboxes.find_by(id: inbox_id)&.name || 'caixa'
+                 else
+                   'Todas'
+                 end
+
+    filename = "leads_#{inbox_name.parameterize}_#{start_date.strftime('%Y-%m-%d')}_a_#{end_date.strftime('%Y-%m-%d')}.csv"
+
+    send_data "\xEF\xBB\xBF#{csv_data}",
+              filename: filename,
+              type: 'text/csv; charset=utf-8',
+              disposition: 'attachment'
+  end
+
   # returns online contacts
   def active
     contacts = Current.account.contacts.where(id: ::OnlineStatusTracker
@@ -222,4 +260,13 @@ class Api::V1::Accounts::ContactsController < Api::V1::Accounts::BaseController
   def render_error(error, error_status)
     render json: error, status: error_status
   end
+
+  def parse_date(value)
+    return nil if value.blank?
+
+    Time.zone.parse(value)
+  rescue ArgumentError, TypeError
+    nil
+  end
 end
+

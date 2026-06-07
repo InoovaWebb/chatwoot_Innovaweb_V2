@@ -99,6 +99,17 @@ class ContactAPI extends ApiClient {
   exportContacts(queryPayload) {
     return axios.post(`${this.url}/export`, queryPayload);
   }
+
+  exportLeads({ startDate, endDate, inboxId } = {}) {
+    const params = new URLSearchParams();
+    if (startDate) params.append('start_date', startDate);
+    if (endDate) params.append('end_date', endDate);
+    if (inboxId) params.append('inbox_id', inboxId);
+    return axios.get(`${this.url}/export_leads?${params.toString()}`, {
+      responseType: 'blob',
+    });
+  }
 }
+
 
 export default new ContactAPI();
