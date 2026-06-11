@@ -125,6 +125,12 @@ Rails.application.routes.draw do
           resources :campaigns, only: [:index, :create, :show, :update, :destroy]
           resources :dashboard_apps, only: [:index, :show, :create, :update, :destroy]
           get :leads_dashboard, to: 'leads_dashboard#index'
+
+          # Asaas Integration
+          resource :asaas, only: [:show, :update], controller: 'asaas' do
+            post :create_charge
+          end
+
           namespace :channels do
             resource :twilio_channel, only: [:create]
           end

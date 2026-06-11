@@ -25,6 +25,7 @@ import ShopifyOrdersList from 'dashboard/components/widgets/conversation/Shopify
 import SidebarActionsHeader from 'dashboard/components-next/SidebarActionsHeader.vue';
 import LinearIssuesList from 'dashboard/components/widgets/conversation/linear/IssuesList.vue';
 import LinearSetupCTA from 'dashboard/components/widgets/conversation/linear/LinearSetupCTA.vue';
+import AsaasChargePanel from './AsaasChargePanel.vue';
 
 const props = defineProps({
   conversationId: {
@@ -272,6 +273,21 @@ onMounted(() => {
               <ContactConversations
                 :contact-id="contact.id"
                 :conversation-id="conversationId"
+              />
+            </AccordionItem>
+          </div>
+          <div v-else-if="element.name === 'asaas_integration'">
+            <AccordionItem
+              title="Integração Asaas"
+              :is-open="isContactSidebarItemOpen('is_asaas_open')"
+              compact
+              @toggle="
+                value => toggleSidebarUIState('is_asaas_open', value)
+              "
+            >
+              <AsaasChargePanel
+                :conversation-id="conversationId"
+                :contact-id="contact.id"
               />
             </AccordionItem>
           </div>
