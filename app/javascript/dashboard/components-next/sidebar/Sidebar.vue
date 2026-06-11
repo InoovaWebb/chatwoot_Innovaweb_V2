@@ -419,6 +419,13 @@ const menuItems = computed(() => {
       ],
     },
     {
+      name: 'Leads Dashboard',
+      label: 'Dashboard de Leads',
+      icon: 'i-lucide-chart-bar',
+      to: accountScopedRoute('leads_dashboard_index'),
+      activeOn: ['leads_dashboard_index'],
+    },
+    {
       name: 'Contacts',
       label: t('SIDEBAR.CONTACTS'),
       icon: 'i-lucide-contact',

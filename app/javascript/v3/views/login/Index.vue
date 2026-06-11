@@ -222,19 +222,21 @@ export default {
   <main
     class="flex flex-col w-full min-h-screen py-20 bg-n-brand/5 dark:bg-n-background sm:px-6 lg:px-8"
   >
-    <section class="max-w-5xl mx-auto">
+    <section class="max-w-5xl mx-auto flex flex-col items-center">
+      <!-- Logo grande e centralizada -->
       <img
         :src="globalConfig.logo"
         :alt="globalConfig.installationName"
-        class="block w-auto h-8 mx-auto dark:hidden"
+        class="block w-auto max-h-24 mx-auto dark:hidden"
       />
       <img
         v-if="globalConfig.logoDark"
         :src="globalConfig.logoDark"
         :alt="globalConfig.installationName"
-        class="hidden w-auto h-8 mx-auto dark:block"
+        class="hidden w-auto max-h-24 mx-auto dark:block"
       />
-      <h2 class="mt-6 text-3xl font-medium text-center text-n-slate-12">
+      <!-- Nome da plataforma abaixo da logo -->
+      <h2 class="mt-4 text-3xl font-medium text-center text-n-slate-12">
         {{ replaceInstallationName($t('LOGIN.TITLE')) }}
       </h2>
       <p v-if="showSignupLink" class="mt-3 text-sm text-center text-n-slate-11">
@@ -337,21 +339,6 @@ export default {
         <Spinner color-scheme="primary" size="" />
       </div>
     </section>
-    <!-- eslint-disable vue/no-bare-strings-in-template @intlify/vue-i18n/no-raw-text -->
-    <p
-      v-if="globalConfig.displayManifest"
-      class="mt-8 text-center text-xs text-n-slate-10"
-    >
-      powered by
-      <a
-        href="https://fazer.ai"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-n-slate-11 hover:text-n-brand"
-      >
-        fazer.ai
-      </a>
-    </p>
-    <!-- eslint-enable vue/no-bare-strings-in-template @intlify/vue-i18n/no-raw-text -->
+
   </main>
 </template>
