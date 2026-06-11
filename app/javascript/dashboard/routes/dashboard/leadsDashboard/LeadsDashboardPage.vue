@@ -1,6 +1,5 @@
 <script>
 import { mapGetters } from 'vuex';
-import { useI18n } from 'vue-i18n';
 import LeadsDashboardAPI from '../../api/leadsDashboard';
 import { useAlert } from 'dashboard/composables';
 import Button from 'dashboard/components-next/button/Button.vue';
@@ -19,10 +18,6 @@ export default {
     Icon,
     DatePicker,
     Bar,
-  },
-  setup() {
-    const { t } = useI18n();
-    return { t };
   },
   data() {
     return {
