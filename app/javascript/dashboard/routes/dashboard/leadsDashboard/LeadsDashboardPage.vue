@@ -1,6 +1,6 @@
 <script>
 import { mapGetters } from 'vuex';
-import LeadsDashboardAPI from '../../api/leadsDashboard';
+import LeadsDashboardAPI from 'dashboard/api/leadsDashboard';
 import { useAlert } from 'dashboard/composables';
 import Button from 'dashboard/components-next/button/Button.vue';
 import Icon from 'dashboard/components-next/icon/Icon.vue';
